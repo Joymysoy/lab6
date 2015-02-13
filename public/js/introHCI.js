@@ -25,9 +25,35 @@ function addProjectDetails(e) {
 	var projectID = $(this).closest('.project').attr('id');
 	// get rid of 'project' from the front of the id 'project3'
 	var idNumber = projectID.substr('project'.length);
-
-	console.log("User clicked on project " + idNumber);
+    console.log("User clicked on project " + idNumber);
+    
+////////////////////////////////////////////////////
+//retrieve project details and add it to the page
+////////////////////////////////////////////////////
+    $(".project").click(function(e){
+        $.get("/project/" + idNumber, addProject);
+        console.log("/project/" + idNumber);
+    });
 }
+
+////////////////////////////////////////////////////
+//see project.json {id, title, date, summary, image}
+////////////////////////////////////////////////////
+function addProject(result) {
+    //console.log(result);   
+        var projectHTML = '<a href="#" class="thumbnail">' +
+        '<img src="' + result['image'] + '" class="detailsImage">' +
+        '<p>' + result['title'] + '</p>' +
+        '<p><small>' + result['date'] + '</small></p></a>' +
+        '<p>' + result['summary'] + '</p>';
+
+     $('#project' + result.id).html(projectHTML);
+
+    };
+
+
+
+
 
 /*
  * Make an AJAX call to retrieve a color palette for the site
@@ -35,4 +61,20 @@ function addProjectDetails(e) {
  */
 function randomizeColors(e) {
 	console.log("User clicked on color button");
+    $.get("/palette", getColor);
 }
+
+function getColor(result) {
+    //console.log (colors);
+    var colors = result.colors.hex;
+  
+    $('body').css('background-color', colors[0]);
+    $('.thumbnail').css('background-color', colors[1]);
+    $('h1, h2, h3, h4, h5, h5').css('color', colors[2]);
+    $('p').css('color', colors[3]);
+    $('.project img').css('opacity', .75);
+}
+
+
+                   
+
